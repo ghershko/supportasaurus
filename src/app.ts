@@ -38,8 +38,9 @@ const app = new bolt.App({
 // });
 
 app.message('hello', async ({ message, say }) => {
+    console.log('recieved message', message)
     await say(`Hey there!`);
-  });
+});
 
 (async () => {
     // Start the app
