@@ -42,6 +42,11 @@ app.message('hello', async ({ message, say }) => {
     await say(`Hey there!`);
 });
 
+app.message('app_mention', async ({ message, say }) => {
+    console.log('received mention', message)
+    await say(`Hey there!`);
+});
+
 (async () => {
     // Start the app
     await app.start(process.env.PORT || 9000);
