@@ -61,6 +61,10 @@ app.event('app_mention', async ({ event, say }) => {
     await say(`Hello <@${event.user}>!`);
 });
 
+app.error(async (error) => {
+    console.error('Error in Slack Event Listener:', error);
+});
+
 expressApp.get('/isAlive', (req, res) => {
     res.send('Server is alive');
 });
