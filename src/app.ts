@@ -3,6 +3,7 @@ import { config } from 'dotenv';
 import OpenAI from 'openai';
 import bolt from '@slack/bolt';
 
+
 config();
 
 // const app = express();
@@ -12,9 +13,18 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
+const expressApp = express();
+
+const receiver = new bolt.ExpressReceiver({
+    signingSecret: process.env.SLACK_SIGNING_SECRET || '',
+    endpoints: '/slack/events',
+    router: expressApp
+});
+
 const app = new bolt.App({
     signingSecret: process.env.SLACK_SIGNING_SECRET,
     token: process.env.SLACK_BOT_TOKEN,
+    receiver: receiver
 });
   
 
@@ -47,9 +57,14 @@ app.message('app_mention', async ({ message, say }) => {
     await say(`Hey there!`);
 });
 
-(async () => {
-    // Start the app
-    await app.start(process.env.PORT || 9000);
-  
-    console.log('⚡️ Bolt app is running!');
-  })();
+app.event('app_mention', async ({ event, say }) => {
+    await say(`Hello <@${event.user}>!`);
+});
+
+expressApp.get('/isAlive', (req, res) => {
+    res.send('Server is alive');
+});
+
+expressApp.listen(process.env.PORT || 3000, () => {
+    console.log(`⚡️ Bolt app is running on port ${process.env.PORT || 3000}!`);
+});
