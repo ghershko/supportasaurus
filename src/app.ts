@@ -27,6 +27,7 @@ const app = new bolt.App({
     receiver: receiver
 });
   
+// -------------------------------------------------------------------------------------- //
 
 // app.post('/ask-gpt', async (req: Request, res: Response) => {
 //     try {
@@ -47,6 +48,8 @@ const app = new bolt.App({
 //     console.log(`Server is running on port ${PORT}`);
 // });
 
+// -------------------------------------------------------------------------------------- //
+
 app.message('hello', async ({ message, say }) => {
     console.log('recieved message', message)
     await say(`Hey there!`);
@@ -64,6 +67,17 @@ app.event('app_mention', async ({ event, say }) => {
 app.error(async (error) => {
     console.error('Error in Slack Event Listener:', error);
 });
+
+app.command('/when-is-my-turn', async ({ command, ack, say }) => {
+    await ack();
+
+    const args = command.text.split(' ');
+
+    await say(`You entered: ${args.join(', ')}`);
+});
+
+
+// -------------------------------------------------------------------------------------- //
 
 expressApp.get('/isAlive', (req, res) => {
     res.send('Server is alive');
