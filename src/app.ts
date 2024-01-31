@@ -33,6 +33,8 @@ expressApp.get('/isAlive', (req, res) => {
     res.send('Server is alive');
 });
 
+expressApp.use(express.json());
+
 expressApp.use((req, _, next) => {
     console.log(`✨ Received request at ${req.path}`);
     next();
@@ -86,7 +88,6 @@ app.command('/when-is-my-turn', async ({ command, ack, say }) => {
 
     await say(`You entered: ${args.join(', ')}`);
 });
-
 
 // -------------------------------------------------------------------------------------- //
 
