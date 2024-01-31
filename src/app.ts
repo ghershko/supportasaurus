@@ -39,6 +39,33 @@ expressApp.use((req, _, next) => {
     console.log(`✨ Received request at ${req.path}`);
     next();
 });
+
+expressApp.post('/slack/events', (req, res) => {
+    console.log('Received POST request at /slack/events with body:', req.body);
+
+    const payload = req.body;
+
+    // Simulate the behavior of SlackRequestHandler
+    switch (payload.type) {
+        case 'url_verification':
+            // Respond to URL verification challenge
+            const response = { challenge: payload.challenge };
+            console.log('Responding with:', response);
+            res.json(response);
+            break;
+        case 'event_callback':
+            // Handle event callback
+            console.log('Handling event callback');
+            app.client.chat.postMessage({
+                channel: payload.channel,
+                text: `Hello <@${payload.user}>!`
+            });
+            break;
+        default:
+            console.log('Invalid payload type');
+            res.status(400).send('Invalid payload type');
+    }
+});
   
 // -------------------------------------------------------------------------------------- //
 
