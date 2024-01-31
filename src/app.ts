@@ -40,33 +40,6 @@ expressApp.use((req, _, next) => {
     next();
 });
 
-expressApp.post('/slack/events', (req, res) => {
-    console.log('Received POST request at /slack/events with body:', req.body);
-
-    const payload = req.body;
-
-    // Simulate the behavior of SlackRequestHandler
-    switch (payload.type) {
-        case 'url_verification':
-            // Respond to URL verification challenge
-            const response = { challenge: payload.challenge };
-            console.log('Responding with:', response);
-            res.json(response);
-            break;
-        case 'event_callback':
-            // Handle event callback
-            console.log('Handling event callback');
-            app.client.chat.postMessage({
-                channel: payload.channel,
-                text: `Hello <@${payload.user}>!`
-            });
-            break;
-        default:
-            console.log('Invalid payload type');
-            res.status(400).send('Invalid payload type');
-    }
-});
-  
 // -------------------------------------------------------------------------------------- //
 
 // app.post('/ask-gpt', async (req: Request, res: Response) => {
@@ -90,19 +63,6 @@ expressApp.post('/slack/events', (req, res) => {
 
 // -------------------------------------------------------------------------------------- //
 
-app.error(async (error) => {
-    console.error('Error in Slack Event Listener:', error);
-});
-
-app.message('hello', async ({ message, say }) => {
-    console.log('recieved message', message)
-    await say(`Hey there!`);
-});
-
-app.message('app_mention', async ({ message, say }) => {
-    console.log('received mention', message)
-    await say(`Hey there!`);
-});
 
 app.event('app_mention', async ({ event, say }) => {
     await say(`Hello <@${event.user}>!`);
@@ -114,6 +74,10 @@ app.command('/when-is-my-turn', async ({ command, ack, say }) => {
     const args = command.text.split(' ');
 
     await say(`You entered: ${args.join(', ')}`);
+});
+
+app.error(async (error) => {
+    console.error('Error in Slack Event Listener:', error);
 });
 
 // -------------------------------------------------------------------------------------- //
