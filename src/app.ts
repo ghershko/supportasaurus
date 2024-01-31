@@ -69,6 +69,11 @@ expressApp.get('/isAlive', (req, res) => {
     res.send('Server is alive');
 });
 
+expressApp.use((req, _, next) => {
+    console.log(`✨ Received request at ${req.path}`);
+    next();
+});
+
 expressApp.listen(process.env.PORT || 3000, () => {
     console.log(`⚡️ Bolt app is running on port ${process.env.PORT || 3000}!`);
 });
