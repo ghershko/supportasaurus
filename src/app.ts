@@ -26,6 +26,17 @@ const app = new bolt.App({
     token: process.env.SLACK_BOT_TOKEN,
     receiver: receiver
 });
+
+// -------------------------------------------------------------------------------------- //
+
+expressApp.get('/isAlive', (req, res) => {
+    res.send('Server is alive');
+});
+
+expressApp.use((req, _, next) => {
+    console.log(`✨ Received request at ${req.path}`);
+    next();
+});
   
 // -------------------------------------------------------------------------------------- //
 
@@ -78,15 +89,6 @@ app.command('/when-is-my-turn', async ({ command, ack, say }) => {
 
 
 // -------------------------------------------------------------------------------------- //
-
-expressApp.get('/isAlive', (req, res) => {
-    res.send('Server is alive');
-});
-
-expressApp.use((req, _, next) => {
-    console.log(`✨ Received request at ${req.path}`);
-    next();
-});
 
 expressApp.listen(process.env.PORT || 3000, () => {
     console.log(`⚡️ Bolt app is running on port ${process.env.PORT || 3000}!`);
