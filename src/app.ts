@@ -61,6 +61,10 @@ expressApp.use((req, _, next) => {
 
 // -------------------------------------------------------------------------------------- //
 
+app.error(async (error) => {
+    console.error('Error in Slack Event Listener:', error);
+});
+
 app.message('hello', async ({ message, say }) => {
     console.log('recieved message', message)
     await say(`Hey there!`);
@@ -73,10 +77,6 @@ app.message('app_mention', async ({ message, say }) => {
 
 app.event('app_mention', async ({ event, say }) => {
     await say(`Hello <@${event.user}>!`);
-});
-
-app.error(async (error) => {
-    console.error('Error in Slack Event Listener:', error);
 });
 
 app.command('/when-is-my-turn', async ({ command, ack, say }) => {
