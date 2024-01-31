@@ -42,38 +42,21 @@ expressApp.use((req, _, next) => {
 
 // -------------------------------------------------------------------------------------- //
 
-// app.post('/ask-gpt', async (req: Request, res: Response) => {
-//     try {
-//         const { prompt } = req.body;
-//         const gptResponse = await openai.chat.completions.create({
-//             messages: [{ role: 'user', content: prompt }],
-//             model: 'gpt-4-1106-preview',
-//         });
-
-//         res.json(gptResponse);
-//     } catch (error: any) {
-//         res.status(500).json({ error: error.message });
-//     }
-// });
-
-// const PORT = process.env.PORT || 9000;
-// app.listen(PORT, () => {
-//     console.log(`Server is running on port ${PORT}`);
-// });
-
-// -------------------------------------------------------------------------------------- //
-
 
 app.event('app_mention', async ({ event, say }) => {
     await say(`Hello <@${event.user}>!`);
 });
 
-app.command('/when-is-my-turn', async ({ command, ack, say }) => {
+app.command('/when-is-my-turn', async ({ command, ack, say, client }) => {
     await ack();
+    const userInfo = await client.users.info({ user: command.user_id });
+
 
     const args = command.text.split(' ');
+    const userName = userInfo.user?.real_name || userInfo.user?.name;
 
-    await say(`You entered: ${args.join(', ')}`);
+
+    await say(`Hi ${userName}. You entered: ${args.join(', ')}`);
 });
 
 app.error(async (error) => {
