@@ -1,4 +1,4 @@
-export default [
+const onCallRotation = [
     'Guy',
     'Erez',
     'Chai',
@@ -14,3 +14,5 @@ export default [
     'Omer',
     'Gil',
 ];
+
+module.exports = onCallRotation;
