@@ -17,7 +17,7 @@ const { countWeeksUntilNextOnCall } = require("../logic/onCallLogic");
 
       if(name) {
         const nextOnCall = countWeeksUntilNextOnCall(name);
-        if(weeksUntil) {
+        if(nextOnCall) {
             await say(`📆 Just a friendly countdown: ${nextOnCall} weeks until your on-call adventure begins!`);
         }
         else {
