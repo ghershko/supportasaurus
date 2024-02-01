@@ -1,4 +1,7 @@
 export default [
+    'Guy',
+    'Erez',
+    'Chai',
     'Liran',
     'Ohad',
     'Farid',
@@ -10,7 +13,4 @@ export default [
     'Tal',
     'Omer',
     'Gil',
-    'Guy',
-    'Erez',
-    'Chai',
 ]

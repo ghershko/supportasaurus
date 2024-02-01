@@ -1,4 +1,5 @@
 import { App } from "@slack/bolt";
+import { countWeeksUntilNextOnCall } from "../logic/onCallLogic";
 
 export const setupSlackEvents = (app: App) => {
     app.event('app_mention', async ({ event, say }) => {
@@ -7,10 +8,22 @@ export const setupSlackEvents = (app: App) => {
 
     app.command('/when-is-my-turn', async ({ command, ack, say, client }) => {
         await ack();
-        const userInfo = await client.users.info({ user: command.user_id });
         const args = command.text.split(' ');
-        const userName = userInfo.user?.real_name || userInfo.user?.name;
+        const [firstName] = args;
 
-        await say(`Hi ${userName}. You entered: ${args.join(', ')}`);
+        const userInfo = await client.users.info({ user: command.user_id });
+        const userName = (userInfo.user?.real_name || userInfo.user?.name)?.split(' ')[0];
+
+        const name = firstName || userName
+
+        if(name) {
+            const nextOnCall = countWeeksUntilNextOnCall(name);
+            await say(`☎️ Your next on call shit is in ${nextOnCall} weeks`);
+        }
+        else {
+            await say(`I can't find your name, please enter it as a parameter as such: /when-is-my-turn <NAME>`);
+        }
+
+
     });
 }
