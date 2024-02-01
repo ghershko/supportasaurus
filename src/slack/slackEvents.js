@@ -1,9 +1,9 @@
 const { countWeeksUntilNextOnCall } = require("../logic/onCallLogic");
 
  const setupSlackEvents = (app) => {
-    app.event('app_mention', async ({ event, say }) => {
-        await say(`Hello <@${event.user}>!`);
-    });
+    // app.event('app_mention', async ({ event, say }) => {
+    //     await say(`Hello <@${event.user}>!`);
+    // });
 
     app.command('/when-is-my-turn', async ({ command, ack, say, client }) => {
         await ack();
@@ -17,7 +17,11 @@ const { countWeeksUntilNextOnCall } = require("../logic/onCallLogic");
 
         if(name) {
             const nextOnCall = countWeeksUntilNextOnCall(name);
-            await say(`☎️ Your next on call shit is in ${nextOnCall} weeks`);
+            await say(
+                weeksUntil 
+                    ? `📆 Just a friendly countdown: ${nextOnCall} weeks until your on-call adventure begins!` 
+                    : "🌟 It's your turn to shine! You're on call this week. Good luck!"
+            );
         }
         else {
             await say(`I can't find your name, please enter it as a parameter as such: /when-is-my-turn <NAME>`);
