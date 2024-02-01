@@ -1,19 +1,26 @@
 {
   "compilerOptions": {
-    "strict": true,
-    "module": "ESNext", 
-    "target": "ES2020",
+    "module": "ESNext",
+    "esModuleInterop": true,
+    "target": "ESNext",
     "moduleResolution": "Node",
     "outDir": "dist",
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "isolatedModules": false,
+    "strict": true,
+    "noImplicitAny": true,
+    "useUnknownInCatchVariables": false,
+    "inlineSourceMap": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "jsx": "react-jsx",
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "jsx": "react-jsx", 
+    "skipLibCheck": true, 
+    "allowSyntheticDefaultImports": true 
   },
   "ts-node": {
     "experimentalSpecifierResolution": "node",
     "transpileOnly": true,
-    "esm": true,
-  }
+    "esm": true
+  },
+  "lib": ["esnext"]
 }
