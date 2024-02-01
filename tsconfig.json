@@ -7,20 +7,24 @@
     "outDir": "dist",
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "isolatedModules": false,
+    "isolatedModules": true, // recommended for projects using Babel or esbuild
     "strict": true,
     "noImplicitAny": true,
     "useUnknownInCatchVariables": false,
     "inlineSourceMap": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "jsx": "react-jsx", 
-    "skipLibCheck": true, 
-    "allowSyntheticDefaultImports": true 
+    "jsx": "react-jsx",
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    // Add these options to handle ESM more effectively
+    "declaration": true,
+    "declarationMap": true,
   },
+  "include": ["src/**/*"], // Ensure all relevant files are included
+  "exclude": ["node_modules", "dist"], // Exclude directories from compilation
   "ts-node": {
     "experimentalSpecifierResolution": "node",
     "transpileOnly": true,
     "esm": true
-  },
-  "lib": ["esnext"]
+  }
 }
