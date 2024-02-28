@@ -1,4 +1,4 @@
-const { countWeeksUntilNextOnCall } = require("../logic/onCallLogic");
+const { countWeeksUntilNextOnCall, getDateRangeForNextOnCall } = require("../logic/onCallLogic");
 
   const setupSlackEvents = (app) => {
       // app.event('app_mention', async ({ event, say }) => {
@@ -17,8 +17,35 @@ const { countWeeksUntilNextOnCall } = require("../logic/onCallLogic");
     
       if (name) {
         const nextOnCall = countWeeksUntilNextOnCall(name);
+        const {start, end} = getDateRangeForNextOnCall(nextOnCall)
+
         if (nextOnCall) {
-          await respond(`📆 Just a friendly countdown: ${nextOnCall} weeks until your on-call adventure begins!`);
+          await respond({
+            blocks: [
+               {
+                 type: 'section',
+                 text: {
+                   type: 'mrkdwn',
+                   text: `📆 Just a friendly countdown: ${nextOnCall} weeks until your on-call adventure begins!`
+                 }
+               },
+               {
+                 type: 'section',
+                 text: {
+                   type: 'mrkdwn',
+                   text: `Starts at: ${start}`
+                 }
+               },
+               {
+                 type: 'section',
+                 text: {
+                   type: 'mrkdwn',
+                   text: `Ends at: ${end}`
+                 }
+               }
+            ]
+           });
+           
         } else {
           await respond("🌟 It's your turn to shine! You're on call this week. Good luck!");
         }
