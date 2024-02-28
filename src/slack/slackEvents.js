@@ -71,7 +71,9 @@ const { calculateWeeksUntilSpecificOnCall, calculateDateRangeForNextOnCall } = r
 
     app.command('/list', async ({ command, ack, respond, client }) => {
       const rotation = getFullOnCallRotation()
-      await respond(rotation);
+      const msg = rotation.map((person, i) => `${i + 1}. ${person}`).join('\n')
+
+      await respond(msg);
     });
 
     app.command('/help', async ({ ack, respond }) => {

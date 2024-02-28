@@ -33,9 +33,10 @@ router.get('/next/:weeks', (req, res) => {
     res.send(onCall);
 });
 
-router.get('/all', (_, res) => {
+router.get('/list', (_, res) => {
     const shifts = getFullOnCallRotation()
-    res.send(shifts);
+    const msg = shifts.map((person, i) => `${i + 1}. ${person}`).join('\n')
+    res.send(msg);
 });
 
 
