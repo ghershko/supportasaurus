@@ -1,11 +1,7 @@
-const { countWeeksUntilNextOnCall, getDateRangeForNextOnCall } = require("../logic/onCallLogic");
+const { calculateWeeksUntilSpecificOnCall, calculateDateRangeForNextOnCall } = require("../logic/onCallLogic");
 
   const setupSlackEvents = (app) => {
-      // app.event('app_mention', async ({ event, say }) => {
-      //     await say(`Hello <@${event.user}>!`);
-      // });
-
-    app.command('/when-is-my-turn', async ({ command, ack, respond, client }) => {
+    app.command('/weeks-until', async ({ command, ack, respond, client }) => {
       await ack();
       const args = command.text.split(' ');
       const [firstName] = args;
@@ -16,8 +12,8 @@ const { countWeeksUntilNextOnCall, getDateRangeForNextOnCall } = require("../log
       const name = firstName || userName;
     
       if (name) {
-        const nextOnCall = countWeeksUntilNextOnCall(name);
-        const {start, end} = getDateRangeForNextOnCall(nextOnCall)
+        const nextOnCall = calculateWeeksUntilSpecificOnCall(name);
+        const {start, end} = calculateDateRangeForNextOnCall(nextOnCall)
 
         if (nextOnCall) {
           await respond({
@@ -53,7 +49,46 @@ const { countWeeksUntilNextOnCall, getDateRangeForNextOnCall } = require("../log
         await respond(`I can't find your name, please enter it as a parameter as such: /when-is-my-turn <NAME>`);
       }
     });
+   
+    app.command('/current', async ({ command, ack, respond, client }) => {
+      await ack();
       
+      const currentOnCall = getCurrentOnCall();
+      res.send(currentOnCall);
+
+      await respond(currentOnCall);
+    });
+   
+    app.command('/next', async ({ command, ack, respond, client }) => {
+      await ack();
+
+      const args = command.text.split(' ');
+      const [weekIndex] = args;
+      
+      const onCall = getOnCallPersonForNextXWeeks(weekIndex || 1);
+      await respond(onCall);
+    });
+
+    app.command('/list', async ({ command, ack, respond, client }) => {
+      const rotation = getFullOnCallRotation()
+      await respond(rotation);
+    });
+
+    app.command('/help', async ({ ack, respond }) => {
+        await ack();
+
+        const commands = [
+            { name: '/weeks-until', description: 'Get the number of weeks until your next on-call and the date range.' },
+            { name: '/current', description: 'Get the current on-call person.' },
+            { name: '/next', description: 'Get the on-call person at the next X weeks.' },
+            { name: '/list', description: 'Get the full on-call rotation' },
+        ];
+
+        const helpMessage = commands.map(cmd => `${cmd.name}: ${cmd.description}`).join('\n');
+
+        await respond(`*Available commands:*\n${helpMessage}`);
+    });
+  
 }
 
 module.exports = setupSlackEvents

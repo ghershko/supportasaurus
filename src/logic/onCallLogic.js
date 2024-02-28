@@ -3,7 +3,6 @@ const onCallRotation = require('../on-call-rotation');
 const weekOfYear = require('dayjs/plugin/weekOfYear');
 const updateLocale = require('dayjs/plugin/updateLocale');
 
-
 dayjs.extend(weekOfYear);
 dayjs.extend(updateLocale);
 
@@ -16,23 +15,25 @@ const getCurrentOnCall = () => {
     return onCallRotation[currentIndex];
 };
 
-const countWeeksUntilNextOnCall = (name) => {
+const calculateOnCallPersonForWeekIndex = (weekIndex) => {
     const currentOnCall = getCurrentOnCall();
     const currentIndex = onCallRotation.indexOf(currentOnCall);
-    let weeksUntil = 0;
+    return onCallRotation[(currentIndex + weekIndex) % onCallRotation.length];
+};
 
-    for (let i = currentIndex; i < currentIndex + onCallRotation.length; i++) {
-        const onCallPerson = onCallRotation[i % onCallRotation.length].toLowerCase();
-        if (onCallPerson.includes(name.toLowerCase())) {
-            break;
-        }
+const calculateWeeksUntilSpecificOnCall = (name) => {
+    let weeksUntil = 0;
+    let onCallPerson = calculateOnCallPersonForWeekIndex(weeksUntil);
+
+    while (onCallPerson.toLowerCase() !== name.toLowerCase()) {
         weeksUntil++;
+        onCallPerson = calculateOnCallPersonForWeekIndex(weeksUntil);
     }
 
     return weeksUntil === onCallRotation.length ? 0 : weeksUntil;
 };
 
-const getDateRangeForNextOnCall = (weeksUntil) => {
+const calculateDateRangeForNextOnCall = (weeksUntil) => {
     const currentDate = dayjs();
     const startDate = currentDate.add(weeksUntil, 'week').startOf('week');
     const endDate = startDate.add(6, 'day');
@@ -40,4 +41,16 @@ const getDateRangeForNextOnCall = (weeksUntil) => {
     return {start: startDate.format('DD/MM/YYYY'), end: endDate.format('DD/MM/YYYY')};
 };
 
-module.exports = {getCurrentOnCall, countWeeksUntilNextOnCall, getDateRangeForNextOnCall}
+const getOnCallPersonForNextXWeeks = (weeks) => {
+    return calculateOnCallPersonForWeekIndex(Number(weeks));
+};
+
+const getFullOnCallRotation = () => onCallRotation;
+
+module.exports = {
+    getCurrentOnCall,
+    calculateWeeksUntilSpecificOnCall,
+    calculateDateRangeForNextOnCall,
+    getOnCallPersonForNextXWeeks,
+    getFullOnCallRotation
+};

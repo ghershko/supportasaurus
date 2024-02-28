@@ -1,5 +1,11 @@
 const express = require('express');
-const { countWeeksUntilNextOnCall, getCurrentOnCall, getDateRangeForNextOnCall } = require('../logic/onCallLogic');
+const { 
+    calculateWeeksUntilSpecificOnCall, 
+    getCurrentOnCall, 
+    calculateDateRangeForNextOnCall, 
+    getOnCallPersonForNextXWeeks, 
+    getFullOnCallRotation 
+} = require('../logic/onCallLogic');
 
 const router = express.Router();
 
@@ -7,10 +13,10 @@ router.get('/isAlive', (req, res) => {
     res.send('Server is alive');
 });
 
-router.get('/when/:name', (req, res) => {
+router.get('/weeksUntil/:name', (req, res) => {
     const name = req.params.name;
-    const weeksUntilNextOnCall = countWeeksUntilNextOnCall(name);
-    const dateRange = getDateRangeForNextOnCall(weeksUntilNextOnCall)
+    const weeksUntilNextOnCall = calculateWeeksUntilSpecificOnCall(name);
+    const dateRange = calculateDateRangeForNextOnCall(weeksUntilNextOnCall)
 
     res.send(`${weeksUntilNextOnCall} weeks. From ${dateRange.start} to ${dateRange.end}`);
 });
@@ -18,6 +24,18 @@ router.get('/when/:name', (req, res) => {
 router.get('/current', (_, res) => {
     const currentOnCall = getCurrentOnCall();
     res.send(currentOnCall);
+});
+
+router.get('/next/:weeks', (req, res) => {
+    const weeks = req.params.weeks;
+
+    const onCall = getOnCallPersonForNextXWeeks(weeks);
+    res.send(onCall);
+});
+
+router.get('/all', (_, res) => {
+    const shifts = getFullOnCallRotation()
+    res.send(shifts);
 });
 
 
