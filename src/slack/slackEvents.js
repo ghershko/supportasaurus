@@ -1,4 +1,4 @@
-const { calculateWeeksUntilSpecificOnCall, calculateDateRangeForNextOnCall } = require("../logic/onCallLogic");
+const { calculateWeeksUntilSpecificOnCall, calculateDateRangeForNextOnCall, getOnCallPersonForNextXWeeks, getCurrentOnCall, getFullOnCallRotation } = require("../logic/onCallLogic");
 
   const setupSlackEvents = (app) => {
     app.command('/weeks-until', async ({ command, ack, respond, client }) => {
