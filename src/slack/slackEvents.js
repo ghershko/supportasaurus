@@ -77,19 +77,31 @@ const { calculateWeeksUntilSpecificOnCall, calculateDateRangeForNextOnCall, getO
     });
 
     app.command('/help', async ({ ack, respond }) => {
-        await ack();
-
-        const commands = [
-            { name: '/weeks-until', description: 'Get the number of weeks until your next on-call and the date range.' },
-            { name: '/current', description: 'Get the current on-call person.' },
-            { name: '/next', description: 'Get the on-call person at the next X weeks.' },
-            { name: '/list', description: 'Get the full on-call rotation' },
-        ];
-
-        const helpMessage = commands.map(cmd => `${cmd.name}: ${cmd.description}`).join('\n');
-
-        await respond(`*Available commands:*\n${helpMessage}`);
-    });
+      await ack();
+  
+      const commands = [
+          { name: '/weeks-until', description: 'Get the number of weeks until your next on-call and the date range' },
+          { name: '/current', description: 'Get the current on-call person' },
+          { name: '/next', description: 'Get the on-call person at the next X weeks' },
+          { name: '/list', description: 'Get the full on-call rotation' },
+      ];
+  
+      const helpMessage = commands.map(cmd => `• \`${cmd.name}\`: ${cmd.description}`).join('\n');
+  
+      await respond({
+          blocks: [
+              {
+                  type: 'section',
+                  text: {
+                      type: 'mrkdwn',
+                      text: `*Available commands:*\n${helpMessage}`
+                  }
+              }
+          ],
+          mrkdwn: true 
+      });
+  });
+  
   
 }
 
