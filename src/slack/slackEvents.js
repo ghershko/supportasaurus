@@ -70,10 +70,11 @@ const { calculateWeeksUntilSpecificOnCall, calculateDateRangeForNextOnCall, getO
     });
 
     app.command('/list', async ({ command, ack, respond, client }) => {
-      const rotation = getFullOnCallRotation()
-      const msg = rotation.map((person, i) => `${i + 1}. ${person}`).join('\n')
-
-      await respond(msg);
+      const rotation = getFullOnCallRotation();
+      const msg = rotation.map((person, i) => `${i + 1}. ${person}`).join('\n');
+      const formattedMsg = `*On-Call Rotation:*\n\`\`\`\n${msg}\n\`\`\``;
+     
+      await respond(formattedMsg);
     });
 
     app.command('/help', async ({ ack, respond }) => {
