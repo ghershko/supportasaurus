@@ -17,6 +17,8 @@ const getSpecificSheet = async (spreadsheetId, sheetName) => {
       includeGridData: true, 
     });
 
+    console.log('res', response)
+
     const { data } = response.data.sheets[0]; 
     return data[0];
   } catch (error) {
