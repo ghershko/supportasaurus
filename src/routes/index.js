@@ -1,11 +1,11 @@
 const express = require('express');
-const { fetchCallRotation } = require('../dal/onCall.dal')
 const { 
     calculateWeeksUntilSpecificOnCall, 
     getCurrentOnCall, 
     calculateDateRangeOfWeekNum, 
     getOnCallPersonForNextXWeeks,
     formatOnCallListMsg,
+    fetchCallRotation,
 } = require('../logic/onCallLogic');
 
 const router = express.Router();

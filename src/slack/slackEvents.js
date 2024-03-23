@@ -1,10 +1,10 @@
-const { fetchCallRotation } = require('../dal/onCall.dal')
 const { 
   calculateWeeksUntilSpecificOnCall, 
   calculateDateRangeOfWeekNum, 
   getOnCallPersonForNextXWeeks, 
   getCurrentOnCall,
   formatOnCallListMsg,
+  fetchCallRotation,
 } = require("../logic/onCallLogic");
 
 const setupSlackEvents = (app) => {

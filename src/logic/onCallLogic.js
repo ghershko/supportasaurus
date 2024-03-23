@@ -9,6 +9,13 @@ dayjs.updateLocale('en', {
     weekStart: 1 // Monday is the first day of the week
 });
 
+const fetchCallRotation = async () =>  {
+    const { rowData } = await getSpecificSheet('1AETwV9w-Nuf6mwM9fFgdRkqxem0D9jxSEVlb7YWpypY', 'Rotation 2024');
+    const rotationList = rowData.slice(1).map(row => row.values[0].formattedValue);
+
+    return shiftArray(rotationList, 3);
+};
+
 const getCurrentOnCall = (onCallRotation) => {
     const currentIndex = dayjs().week() % onCallRotation.length;
     return onCallRotation[currentIndex];
@@ -59,5 +66,6 @@ module.exports = {
     calculateWeeksUntilSpecificOnCall,
     calculateDateRangeOfWeekNum,
     getOnCallPersonForNextXWeeks,
-    formatOnCallListMsg
+    formatOnCallListMsg,
+    fetchCallRotation,
 };
