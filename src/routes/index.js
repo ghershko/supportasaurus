@@ -52,15 +52,12 @@ router.get('/switch/:name1/:name2', async (req, res) => {
 
     const onCallRotation = await fetchCallRotation();
 
-    if(!onCallRotation.includes(name1)) res.send(`${name1} is not in the rotation`) 
-    if(!onCallRotation.includes(name2)) res.send(`${name2} is not in the rotation`)
-
     try{
         await swichOnCallSifts(onCallRotation, name1, name2);
-        res.send(`Successfully switch between ${name1} and ${name2}`);
+        res.send(`Successfully switched between ${name1} and ${name2}`);
     }
     catch(err) {
-        res.sendStatus(500);
+        res.status(500).send(err.message);
     }
 
 });

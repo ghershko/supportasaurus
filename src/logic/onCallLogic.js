@@ -24,6 +24,9 @@ const fetchSiftedCallRotation = async () =>  {
 };
 
 const swichOnCallSifts = async (onCallRotation, name1, name2) => {
+    if(!onCallRotation.includes(name1)) throw new Error(`${name1} is not in the rotation`) 
+    if(!onCallRotation.includes(name2)) throw new Error(`${name2} is not in the rotation`)
+
     const updatedValues = onCallRotation.map(item => {
         if(item === name1) return name2;
         if(item === name2) return name1;

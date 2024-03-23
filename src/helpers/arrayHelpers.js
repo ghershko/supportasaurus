@@ -6,4 +6,8 @@ const  shiftArray = (arr, shifBy) => {
   }, [])
 };
 
-module.exports = { shiftArray };
+const caseInsensitiveCheck = (arr, str) => {
+  return arr.some(name => name.toLowerCase() === str.toLowerCase());
+}
+
+module.exports = { caseInsensitiveCheck, shiftArray };

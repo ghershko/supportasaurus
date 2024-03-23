@@ -5,6 +5,8 @@ const {
   getCurrentOnCall,
   formatOnCallListMsg,
   fetchSiftedCallRotation,
+  fetchCallRotation,
+  swichOnCallSifts,
 } = require("../logic/onCallLogic");
 
 const setupSlackEvents = (app) => {
@@ -77,6 +79,22 @@ const setupSlackEvents = (app) => {
       const onCall = getOnCallPersonForNextXWeeks(onCallRotation, weekIndex || 1);
       await respond(onCall);
     });
+    
+    app.command('/switch', async ({ command, ack, respond }) => {
+      await ack();
+
+      const args = command.text.split(' ');
+      const [name1, name2] = args;
+      
+      try{
+        const onCallRotation = await fetchCallRotation();
+        const onCall = swichOnCallSifts(onCallRotation,name1, name2);
+        await respond(onCall);
+      }
+      catch(err) {
+        await respond(`Error: ${err.message}`);
+      }
+    });
 
     app.command('/list', async ({ respond }) => {
       const onCallRotation = await fetchSiftedCallRotation();
@@ -94,6 +112,7 @@ const setupSlackEvents = (app) => {
           { name: '/current', description: 'Get the current on-call person' },
           { name: '/next', description: 'Get the on-call person at the next X weeks' },
           { name: '/list', description: 'Get the full on-call rotation' },
+          { name: '/switch', description: 'Switch the on-call shifts between two specified team members' },
       ];
 
       const helpMessage = commands.map(cmd => `• \`${cmd.name}\`: ${cmd.description}`).join('\n');
