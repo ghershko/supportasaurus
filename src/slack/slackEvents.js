@@ -90,8 +90,15 @@ const setupSlackEvents = (app) => {
             
         const onCallRotation = await fetchCallRotation();
 
-        if(!onCallRotation.includes(name1)) respond(`${name1} is not in the rotation`) 
-        if(!onCallRotation.includes(name2)) respond(`${name2} is not in the rotation`)
+        if(!onCallRotation.includes(name1)) {
+          respond(`${name1} is not in the rotation`);
+          return;
+        }
+
+        if(!onCallRotation.includes(name2)) { 
+           respond(`${name2} is not in the rotation`)
+           return;
+          }
 
         await swichOnCallSifts(onCallRotation,name1, name2);
         await respond(`Successfully switched between ${name1} and ${name2}`);
