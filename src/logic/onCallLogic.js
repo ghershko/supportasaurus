@@ -1,6 +1,9 @@
 const dayjs = require('dayjs');
 const weekOfYear = require('dayjs/plugin/weekOfYear');
 const updateLocale = require('dayjs/plugin/updateLocale');
+const { onCallSheet } = require('../config');
+const { updateSheet, getSpecificSheet } = require('../services/googleSheet.service');
+const { shiftArray } = require('../helpers/arrayHelpers');
 
 dayjs.extend(weekOfYear);
 dayjs.extend(updateLocale);
@@ -10,11 +13,29 @@ dayjs.updateLocale('en', {
 });
 
 const fetchCallRotation = async () =>  {
-    const { rowData } = await getSpecificSheet('1AETwV9w-Nuf6mwM9fFgdRkqxem0D9jxSEVlb7YWpypY', 'Rotation 2024');
-    const rotationList = rowData.slice(1).map(row => row.values[0].formattedValue);
-
-    return shiftArray(rotationList, 3);
+    const { rowData } = await getSpecificSheet(onCallSheet.docId, onCallSheet.range);
+    return rowData.map(row => row.values[0].formattedValue)
 };
+
+// To normalize the list in google sheet to the real shifts while taking into account the current week's on-call.
+const fetchSiftedCallRotation = async () =>  {
+    const rowData = await fetchCallRotation();
+    return shiftArray(rowData, 3);
+};
+
+const swichOnCallSifts = async (onCallRotation, name1, name2) => {
+    const updatedValues = onCallRotation.map(item => {
+        if(item === name1) return name2;
+        if(item === name2) return name1;
+        return item;
+    });
+
+    await updateSheet(
+        onCallSheet.docId, 
+        onCallSheet.range, 
+        updatedValues.map(item => [item])
+    );
+}
 
 const getCurrentOnCall = (onCallRotation) => {
     const currentIndex = dayjs().week() % onCallRotation.length;
@@ -67,5 +88,7 @@ module.exports = {
     calculateDateRangeOfWeekNum,
     getOnCallPersonForNextXWeeks,
     formatOnCallListMsg,
+    fetchSiftedCallRotation,
     fetchCallRotation,
+    swichOnCallSifts
 };

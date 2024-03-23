@@ -4,7 +4,7 @@ const {
   getOnCallPersonForNextXWeeks, 
   getCurrentOnCall,
   formatOnCallListMsg,
-  fetchCallRotation,
+  fetchSiftedCallRotation,
 } = require("../logic/onCallLogic");
 
 const setupSlackEvents = (app) => {
@@ -19,7 +19,7 @@ const setupSlackEvents = (app) => {
     const name = firstName || userName;
   
     if (name) {
-      const onCallRotation = await fetchCallRotation();
+      const onCallRotation = await fetchSiftedCallRotation();
 
       const nextOnCall = calculateWeeksUntilSpecificOnCall(onCallRotation, name);
       const {start, end} = calculateDateRangeOfWeekNum(nextOnCall);
@@ -61,7 +61,7 @@ const setupSlackEvents = (app) => {
     
     app.command('/current', async ({ ack, respond }) => {
       await ack();
-      const onCallRotation = await fetchCallRotation();
+      const onCallRotation = await fetchSiftedCallRotation();
       const currentOnCall = await getCurrentOnCall(onCallRotation);
 
       await respond(currentOnCall);
@@ -73,13 +73,13 @@ const setupSlackEvents = (app) => {
       const args = command.text.split(' ');
       const [weekIndex] = args;
       
-      const onCallRotation = await fetchCallRotation();
+      const onCallRotation = await fetchSiftedCallRotation();
       const onCall = getOnCallPersonForNextXWeeks(onCallRotation, weekIndex || 1);
       await respond(onCall);
     });
 
     app.command('/list', async ({ respond }) => {
-      const onCallRotation = await fetchCallRotation();
+      const onCallRotation = await fetchSiftedCallRotation();
       const msg = formatOnCallListMsg(onCallRotation);
       const formattedMsg = `*On-Call Rotation:*\n\`\`\`\n${msg}\n\`\`\``;
       
