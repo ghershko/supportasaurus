@@ -1,41 +1,46 @@
 const express = require('express');
+const { fetchCallRotation } = require('../dal/onCall.dal')
 const { 
     calculateWeeksUntilSpecificOnCall, 
     getCurrentOnCall, 
-    calculateDateRangeForNextOnCall, 
-    getOnCallPersonForNextXWeeks, 
-    getFullOnCallRotation 
+    calculateDateRangeOfWeekNum, 
+    getOnCallPersonForNextXWeeks,
+    formatOnCallListMsg,
 } = require('../logic/onCallLogic');
 
 const router = express.Router();
 
-router.get('/isAlive', (req, res) => {
+router.get('/isAlive', (_, res) => {
     res.send('Server is alive');
 });
 
-router.get('/weeksUntil/:name', (req, res) => {
+router.get('/weeksUntil/:name', async (req, res) => {
     const name = req.params.name;
-    const weeksUntilNextOnCall = calculateWeeksUntilSpecificOnCall(name);
-    const dateRange = calculateDateRangeForNextOnCall(weeksUntilNextOnCall)
+
+    const onCallRotation = await fetchCallRotation();
+    const weeksUntilNextOnCall = calculateWeeksUntilSpecificOnCall(onCallRotation, name);
+    const dateRange = calculateDateRangeOfWeekNum(weeksUntilNextOnCall);
 
     res.send(`${weeksUntilNextOnCall} weeks. From ${dateRange.start} to ${dateRange.end}`);
 });
 
-router.get('/current', (_, res) => {
-    const currentOnCall = getCurrentOnCall();
+router.get('/current', async (_, res) => {
+    const onCallRotation = await fetchCallRotation();
+    const currentOnCall = getCurrentOnCall(onCallRotation);
     res.send(currentOnCall);
 });
 
-router.get('/next/:weeks', (req, res) => {
+router.get('/next/:weeks', async (req, res) => {
     const weeks = req.params.weeks;
 
-    const onCall = getOnCallPersonForNextXWeeks(weeks);
+    const onCallRotation = await fetchCallRotation();
+    const onCall = getOnCallPersonForNextXWeeks(onCallRotation, weeks);
     res.send(onCall);
 });
 
-router.get('/list', (_, res) => {
-    const shifts = getFullOnCallRotation()
-    const msg = shifts.map((person, i) => `${i + 1}. ${person}`).join('\n')
+router.get('/list', async (_, res) => {
+    const onCallRotation = await fetchCallRotation();
+    const msg = formatOnCallListMsg(onCallRotation);
     res.send(msg);
 });
 

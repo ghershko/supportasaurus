@@ -2,3 +2,4 @@ node_modules/
 .npm
 .env
 dist/
+rnd-devs-service-account.json

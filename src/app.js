@@ -1,17 +1,14 @@
 const express = require('express');
-const { config } = require('dotenv');
-const OpenAI = require('openai');
+// const OpenAI = require('openai');
 const bolt = require('@slack/bolt');
 const routes = require('./routes');
 const setupSlackEvents = require('./slack/slackEvents');
+const { port } = require('./config');
 
 
-config();
-const port = process.env.PORT || 3000
-
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
+// const openai = new OpenAI({
+//     apiKey: process.env.OPENAI_API_KEY,
+// });
 
 const expressApp = express();
 
