@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { credentialsBase64 } = require('../config');
 
-// for production
+// to use GOOGLE_CREDENTIALS_BASE64
 const decodeGoogleCredentials = () => {
     if (credentialsBase64) {
       console.log('writing GOOGLE_APPLICATION_CREDENTIALS...')

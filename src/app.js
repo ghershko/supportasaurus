@@ -1,9 +1,9 @@
 const express = require('express');
 // const OpenAI = require('openai');
-const bolt = require('@slack/bolt');
+const boltServer = require('@slack/bolt');
 const routes = require('./routes');
 const setupSlackEvents = require('./slack/slackEvents');
-const { port } = require('./config');
+const { port, slackSecret, bolt } = require('./config');
 const decodeGoogleCredentials = require('./services/decodeGoogleCredentials.service');
 
 decodeGoogleCredentials()
@@ -15,15 +15,15 @@ decodeGoogleCredentials()
 
 const expressApp = express();
 
-const receiver = new bolt.ExpressReceiver({
-    signingSecret: process.env.SLACK_SIGNING_SECRET || '',
+const receiver = new boltServer.ExpressReceiver({
+    signingSecret:  slackSecret,
     endpoints: '/slack/events',
     router: expressApp
 });
 
-const app = new bolt.App({
-    signingSecret: process.env.SLACK_SIGNING_SECRET,
-    token: process.env.SLACK_BOT_TOKEN,
+const app = new boltServer.App({
+    signingSecret: bolt.signingSecret,
+    token: bolt.token,
     receiver: receiver
 });
 
