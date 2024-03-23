@@ -4,6 +4,9 @@ const bolt = require('@slack/bolt');
 const routes = require('./routes');
 const setupSlackEvents = require('./slack/slackEvents');
 const { port } = require('./config');
+const decodeGoogleCredentials = require('./services/decodeGoogleCredentials.service');
+
+decodeGoogleCredentials()
 
 
 // const openai = new OpenAI({
