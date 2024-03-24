@@ -91,12 +91,12 @@ const setupSlackEvents = (app) => {
         const onCallRotation = await fetchCallRotation();
 
         if(!onCallRotation.includes(name1)) {
-          respond(`${name1} is not in the rotation`);
+          respond(`${name1} is not in the rotation. Note: currently I'm case sensitive 🦕`);
           return;
         }
 
         if(!onCallRotation.includes(name2)) { 
-           respond(`${name2} is not in the rotation`)
+           respond(`${name2} is not in the rotation. Note: currently I'm case sensitive 🦕`)
            return;
           }
 
