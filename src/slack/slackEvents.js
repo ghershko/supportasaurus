@@ -108,7 +108,9 @@ const setupSlackEvents = (app) => {
       }
     });
 
-    app.command('/list', async ({ respond }) => {
+    app.command('/list', async ({ ack, respond }) => {
+      await ack();
+
       const onCallRotation = await fetchSiftedCallRotation();
       const msg = formatOnCallListMsg(onCallRotation);
       const formattedMsg = `*On-Call Rotation:*\n\`\`\`\n${msg}\n\`\`\``;
